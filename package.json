@@ -1,0 +1,21 @@
+{
+  "name": "dismusic.js",
+  "version": "1.1.2",
+  "description": "Sistema de música, feito por: Deto.",
+  "main": "index.js",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.3",
+    "cli-color": "^2.0.0",
+    "discord.js": "^12.5.0",
+    "express": "^4.17.1",
+    "ffmpeg": "0.0.4",
+    "ytdl-core": "^4.2.1",
+    "ytsr": "^3.2.1"
+  },
+  "keywords": [
+    "discord-music-bot",
+    "discord.js-v12-music-bot"
+  ],
+  "author": "Deto",
+  "license": "MIT"
+}
