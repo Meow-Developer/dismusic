@@ -3,8 +3,7 @@ module.exports = async (client, message, args) => {
 		return message.channel.send(
 			'Você não tem permissão de administrador para alterar o volume da música!'
 		);
-	let channel = message.member.voice;
-	let queue = await client.queues.get(message.guild.id);
+	const queue = await client.queues.get(message.guild.id);
 	if (!queue) return message.channel.send('Não estou tocando música aqui!');
 	if (message.member.voice.channel !== message.guild.me.voice.channel)
 		return message.channel.send(

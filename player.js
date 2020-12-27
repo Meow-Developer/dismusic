@@ -1,10 +1,9 @@
 const ytdl = require('ytdl-core');
 require('@discordjs/opus');
 require('ffmpeg');
-class player {
-	constructor() {}
+module.exports = class Player {
 	async system(client, message, song, msg) {
-		var queue = await client.queues.get(message.guild.id);
+		let queue = await client.queues.get(message.guild.id);
 		if (!song) {
 			if (queue) {
 				message.channel.send('A música acabou...');
@@ -13,7 +12,7 @@ class player {
 			}
 		}
 		if (!queue) {
-			var conn = await message.member.voice.channel.join();
+			const conn = await message.member.voice.channel.join();
 			queue = {
 				volume: 50,
 				connection: conn,
@@ -23,7 +22,7 @@ class player {
 			client.queues.set(message.guild.id, queue);
 		}
 		queue.dispatcher = await queue.connection.play(
-			await ytdl(song.url, {
+			ytdl(song.url, {
 				highWaterMark: 1,
 				type: 'opus',
 				volume: queue.volume / 100,
@@ -38,14 +37,14 @@ class player {
 						color: 0xffffff
 					}
 				})
-				.then(xyz => {
+				.then(playingMessage => {
 					queue.dispatcher.on('finish', async () => {
-						xyz && xyz.delete();
+						playingMessage.delete();
 						await queue.songs.shift();
 						client.player.system(client, message, queue.songs[0]);
 					});
 					queue.connection.on('disconnect', () => {
-						xyz && xyz.delete();
+						playingMessage.delete();
 						client.queues.delete(message.member.guild.id);
 					});
 				}),
@@ -53,4 +52,3 @@ class player {
 		);
 	}
 }
-module.exports = player;

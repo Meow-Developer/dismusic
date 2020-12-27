@@ -1,5 +1,5 @@
 module.exports = async (client, message, args) => {
-	let queue = await client.queues.get(message.guild.id);
+	const queue = await client.queues.get(message.guild.id);
 	if (!queue) return message.channel.send('Não estou tocando música aqui!');
 	if (message.member.voice.channel !== message.guild.me.voice.channel)
 		return message.channel.send(
