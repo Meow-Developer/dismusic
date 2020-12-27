@@ -1,7 +1,7 @@
 const ytsr = require('ytsr');
 module.exports = async (client, message, args) => {
-	var queue = await client.queues.get(message.guild.id);
-	var { channel } = message.member.voice;
+	const queue = await client.queues.get(message.guild.id);
+	const { channel } = message.member.voice;
 	if (!channel)
 		return message.channel.send(
 			'Entre em um canal de voz para usar esse comando!'
@@ -16,7 +16,7 @@ module.exports = async (client, message, args) => {
 		return message.channel.send('Diga o nome ou link da música a ser tocada!');
 	message.channel.send('Pesquisando...').then(abc => {
 		ytsr(args.join(' '), { safeSearch: true, limit: 1 }).then(result => {
-			let song = result.items[0];
+			const song = result.items[0];
 			abc.delete();
 			if (!song) return message.channel.send('Não encontrei a música!');
 			message.channel.send({
