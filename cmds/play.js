@@ -14,26 +14,15 @@ module.exports = async (client, message, args) => {
 		);
 	if (!args.length)
 		return message.channel.send('Diga o nome ou link da música a ser tocada!');
-	message.channel.send('Pesquisando...').then(abc => {
-		ytsr(args.join(' '), { safeSearch: true, limit: 1 }).then(result => {
-			const song = result.items[0];
-			abc.delete();
-			if (!song) return message.channel.send('Não encontrei a música!');
-			message.channel.send({
-				embed: {
-					title: 'Música adicionada a playlist:',
-					description: `[${song.title}](${song.url})`,
-					thumbnail: { url: song.bestThumbnail.url || null },
-					color: 0xffffff
-				}
-			});
-			if (queue) {
-				queue.songs.push(song);
-			} else {
-				message.channel
-					.send('Criando player...')
-					.then(msg => client.player.system(client, message, song, msg));
-			}
-		});
+	ytsr(args.join(' '), { safeSearch: true, limit: 1 }).then(async result => {
+		if (!result.items[0])
+			return message.channel.send('Não encontrei a música!');
+		var song = {
+			title: result.items[0].title,
+			url: result.items[0].url
+		};
+		message.channel.send(`Música adicionada a playlist: \`${song.title}\``);
+		if (queue) return queue.songs.push(song);
+		client.player.system(message, song);
 	});
 };

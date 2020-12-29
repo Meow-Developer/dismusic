@@ -19,5 +19,5 @@ module.exports = async (client, message, args) => {
 		return message.channel.send('Eu só suporto volumes de `0` há `200`!');
 	queue.volume = args[0];
 	queue.connection.dispatcher.setVolumeLogarithmic(args[0] / 100);
-	message.channel.send(`O volume setado é: \`${queue.volume}\`!`);
+	message.channel.send(`Volume alterado para: \`${queue.volume}\`!`);
 };

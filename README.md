@@ -13,11 +13,5 @@ queue [q]
  
 • Uso: require('dismusic.js')(client, 'prefix')
  
-• Instale essas packages para o funcionamento correto:
- 
-ytsr
-ytdl-core
-@discordjs/opus
-ffmpeg
- 
 • Feito por: Deto.
+• Contribuidor: LuckShiba.

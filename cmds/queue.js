@@ -5,18 +5,12 @@ module.exports = async (client, message, args) => {
 	let pagina = 1;
 	let totalPages = parseInt(queue.songs.length / 10 + 1);
 	message.channel
-		.send({
-			embed: {
-				title: 'Playlist:',
-				description: `${queue.songs
-					.map(
-						(song, index) => `\`${index + 1}:\` [${song.title}](${song.url})`
-					)
-					.slice(0, 10)
-					.join('\n')}`,
-				color: 0xffffff
-			}
-		})
+		.send(
+			`Playlist:\n${queue.songs
+				.map((song, index) => `\`${index + 1} - ${song.title}\``)
+				.slice(0, 10)
+				.join('\n')}`
+		)
 		.then(async list => {
 			if (queue.songs.length > 10) {
 				const reactions = {
@@ -26,7 +20,7 @@ module.exports = async (client, message, args) => {
 							num =
 								num.toString().length > 1
 									? num -
-										parseInt(num.toString().slice(num.toString().length - 1))
+									  parseInt(num.toString().slice(num.toString().length - 1))
 									: 0;
 							pagina -= 1;
 						} else {
@@ -39,11 +33,10 @@ module.exports = async (client, message, args) => {
 							num =
 								num.toString().length > 1
 									? num -
-										parseInt(num.toString().slice(num.toString().length - 1))
+									  parseInt(num.toString().slice(num.toString().length - 1))
 									: 0;
 							num = num + 10;
 							pagina += 1;
-	
 						} else {
 							pagina = 1;
 							num = 0;
@@ -56,29 +49,22 @@ module.exports = async (client, message, args) => {
 				}
 				const collector = list.createReactionCollector(
 					(reaction, user) =>
-						user.id === message.author.id && emojis.includes(reaction.emoji.name)
+						user.id === message.author.id &&
+						emojis.includes(reaction.emoji.name)
 				);
 				const edit = () => {
-					list.edit({
-						embed: {
-							title: 'Playlist:',
-							description: `${queue.songs
-								.map(
-									(song, index) =>
-										`\`${index + 1}:\` [${song.title}](${song.url})`
-								)
-								.slice(pagina * 10 - 10, pagina * 10)
-								.join('\n')}`,
-							color: 0xffffff
-						}
-					});
-				}
-
+					list.edit(
+						`Playlist:\n${queue.songs
+							.map((song, index) => `\`${index + 1} - ${song.title}\``)
+							.slice(pagina * 10 - 10, pagina * 10)
+							.join('\n')}`
+					);
+				};
 				collector.on('collect', reaction => {
 					reactions[reaction.emoji.name]();
 					edit();
 					reaction.users.remove(message.author);
-				})
+				});
 			}
 		});
 };

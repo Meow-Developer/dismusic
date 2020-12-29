@@ -1,15 +1,11 @@
 const ytdl = require('ytdl-core');
-require('@discordjs/opus');
-require('ffmpeg');
 module.exports = class Player {
-	async system(client, message, song, msg) {
-		let queue = await client.queues.get(message.guild.id);
+	async system(message, song) {
+		let queue = await message.client.queues.get(message.guild.id);
 		if (!song) {
-			if (queue) {
-				message.channel.send('A música acabou...');
-				await queue.connection.disconnect();
-				return client.queues.delete(message.member.guild.id);
-			}
+			message.channel.send('A música acabou...');
+			await queue.connection.disconnect();
+			return message.client.queues.delete(message.member.guild.id);
 		}
 		if (!queue) {
 			const conn = await message.member.voice.channel.join();
@@ -19,36 +15,25 @@ module.exports = class Player {
 				dispatcher: null,
 				songs: [song]
 			};
-			client.queues.set(message.guild.id, queue);
+			message.client.queues.set(message.member.guild.id, queue);
 		}
 		queue.dispatcher = await queue.connection.play(
-			ytdl(song.url, {
+			await ytdl(song.url, {
 				highWaterMark: 1,
 				type: 'opus',
 				volume: queue.volume / 100,
 				bitrate: 'auto'
 			}),
-			message.channel
-				.send({
-					embed: {
-						title: 'Tocando agora:',
-						description: `[${song.title}](${song.url})`,
-						thumbnail: { url: song.bestThumbnail.url || null },
-						color: 0xffffff
-					}
-				})
-				.then(playingMessage => {
-					queue.dispatcher.on('finish', async () => {
-						playingMessage.delete();
-						await queue.songs.shift();
-						client.player.system(client, message, queue.songs[0]);
-					});
-					queue.connection.on('disconnect', () => {
-						playingMessage.delete();
-						client.queues.delete(message.member.guild.id);
-					});
-				}),
-			msg && msg.delete()
+			message.channel.send(`Tocando agora: \`${song.title}\``)
 		);
+		queue.dispatcher.on('finish', async () => {
+			await queue.songs.shift();
+			message.client.player.system(message, queue.songs[0]);
+		});
+		queue.connection.on('disconnect', async () => {
+			queue.songs = [];
+			await message.client.queues.set(message.guild.id, queue);
+			queue.dispatcher.end();
+		});
 	}
-}
+};

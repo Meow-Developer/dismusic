@@ -4,7 +4,7 @@ const clc = require('cli-color');
 const error = clc.red.bold;
 const notice = clc.blue;
 const info =
-`• Sistema de música para discord.js-v12.\n\n• Comandos:\n\nplay [p, tocar]\npause [pausar]\nnowplaying [np]\nresume [resumir]\nskip [pular]\nvolume [vol]\nstop [parar]\nqueue [q]\n\n• Uso: require('dismusic.js')(client, 'prefix')\n\n• Instale essas packages para o funcionamento correto:\n\nytsr\nytdl-core\n@discordjs/opus\nffmpeg\n\n• Feito por: Deto.`;
+`• Sistema de música para discord.js-v12.\n\n• Comandos:\n\nplay [p, tocar]\npause [pausar]\nnowplaying [np]\nresume [resumir]\nskip [pular]\nvolume [vol]\nstop [parar]\nqueue [q]\n\n• Uso: require('dismusic.js')(client, 'prefix')\n\n• Feito por: Deto.\n• Contribuidor: LuckShiba.`;
 require('express')()
 	.get('/', (req, res) => {
 		res.send(info);
